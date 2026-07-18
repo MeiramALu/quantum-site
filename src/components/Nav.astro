@@ -1,0 +1,228 @@
+---
+import { Image } from 'astro:assets';
+import farabi from '../assets/logos/farabi.png';
+import spinq from '../assets/logos/spinq.png';
+
+interface Props {
+  active?: 'home' | 'research' | 'media';
+}
+const { active = 'home' } = Astro.props;
+
+// Collaborate opens the visitor's mail client — the address is never shown as text.
+const collabHref =
+  'mailto:azatbekuly_nurtugan3@live.kaznu.kz?subject=Collaboration%20with%20Quantum%20AI%20Laboratory';
+
+const links = [
+  { href: '/', label: 'Home', key: 'home' },
+  { href: '/research', label: 'Research', key: 'research' },
+  { href: '/media', label: 'Media', key: 'media' },
+];
+---
+
+<header class="nav" data-nav>
+  <div class="container nav-inner">
+    <a class="brand" href="/" aria-label="Quantum AI Laboratory — home">
+      <Image src={farabi} alt="Al-Farabi Kazakh National University" class="logo logo-farabi" widths={[64, 128]} sizes="34px" />
+      <span class="wordmark">Quantum&nbsp;AI</span>
+      <span class="brand-divider" aria-hidden="true"></span>
+      <Image src={spinq} alt="SpinQ" class="logo logo-spinq" widths={[64, 128]} sizes="30px" />
+    </a>
+
+    <nav class="nav-links" aria-label="Primary">
+      {links.map((l) => (
+        <a
+          href={l.href}
+          class:list={['nav-link', { current: active === l.key }]}
+          aria-current={active === l.key ? 'page' : undefined}
+        >
+          {l.label}
+        </a>
+      ))}
+      <a class="nav-cta" href={collabHref}>Collaborate</a>
+    </nav>
+
+    <button
+      class="nav-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      aria-label="Open menu"
+      data-toggle
+    >
+      <span></span><span></span>
+    </button>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" hidden data-mobile>
+    {links.map((l) => (
+      <a href={l.href} class:list={['mobile-link', { current: active === l.key }]}>{l.label}</a>
+    ))}
+    <a class="mobile-link mobile-cta" href={collabHref}>Collaborate</a>
+  </div>
+</header>
+
+<script is:inline>
+  (function () {
+    var toggle = document.querySelector('[data-toggle]');
+    var menu = document.querySelector('[data-mobile]');
+    var nav = document.querySelector('[data-nav]');
+    if (toggle && menu) {
+      toggle.addEventListener('click', function () {
+        var open = toggle.getAttribute('aria-expanded') === 'true';
+        toggle.setAttribute('aria-expanded', String(!open));
+        toggle.setAttribute('aria-label', open ? 'Open menu' : 'Close menu');
+        if (open) { menu.hidden = true; } else { menu.hidden = false; }
+      });
+    }
+    if (nav) {
+      var onScroll = function () {
+        if (window.scrollY > 8) nav.setAttribute('data-scrolled', '');
+        else nav.removeAttribute('data-scrolled');
+      };
+      onScroll();
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
+  })();
+</script>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: color-mix(in srgb, var(--c-canvas) 88%, transparent);
+    backdrop-filter: saturate(1.4) blur(10px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+  .nav[data-scrolled] {
+    border-bottom-color: var(--c-hairline);
+    background: color-mix(in srgb, var(--c-canvas) 94%, transparent);
+  }
+  .nav-inner {
+    height: 66px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s-md);
+  }
+  .brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 11px;
+    color: var(--c-ink);
+    min-width: 0;
+  }
+  .logo { flex: none; width: auto; object-fit: contain; }
+  .logo-farabi { height: 34px; }
+  .logo-spinq { height: 28px; }
+  .brand-divider {
+    width: 1px;
+    height: 24px;
+    background: var(--c-hairline);
+    flex: none;
+  }
+  .wordmark {
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    color: var(--c-ink);
+  }
+
+  .nav-links { display: flex; align-items: center; gap: 4px; }
+  .nav-link {
+    font-size: 15px;
+    padding: 8px 12px;
+    color: var(--c-ink);
+    position: relative;
+  }
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 4px;
+    height: 1.5px;
+    background: var(--c-ink);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .nav-link:hover::after { transform: scaleX(1); }
+  .nav-link.current::after { transform: scaleX(1); background: var(--c-primary); height: 2px; }
+
+  .nav-cta {
+    margin-left: 10px;
+    height: 40px;
+    padding: 0 18px;
+    display: inline-flex;
+    align-items: center;
+    background: var(--c-ink-deep);
+    color: var(--c-canvas);
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: background-color 0.15s ease, color 0.15s ease;
+  }
+  .nav-cta:hover { background: var(--c-primary); color: var(--c-ink-deep); }
+
+  .nav-toggle {
+    display: none;
+    width: 44px;
+    height: 44px;
+    background: transparent;
+    border: 1px solid var(--c-hairline);
+    cursor: pointer;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+  .nav-toggle span {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: var(--c-ink);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+  .nav-toggle[aria-expanded='true'] span:first-child { transform: translateY(3.25px) rotate(45deg); }
+  .nav-toggle[aria-expanded='true'] span:last-child { transform: translateY(-3.25px) rotate(-45deg); }
+
+  .mobile-menu {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid var(--c-hairline);
+    background: var(--c-canvas);
+    padding: var(--s-sm) var(--s-md) var(--s-base);
+  }
+  .mobile-menu[hidden] { display: none; }
+  .mobile-link {
+    padding: 13px 4px;
+    font-family: var(--f-display);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    border-bottom: 1px solid var(--c-hairline);
+  }
+  .mobile-link.current { color: var(--c-muted); }
+  .mobile-cta { border-bottom: 0; color: var(--c-ink); }
+
+  @media (max-width: 760px) {
+    .nav-links { display: none; }
+    .nav-toggle { display: inline-flex; }
+    .nav-inner { height: 58px; }
+    .logo-farabi { height: 30px; }
+    .logo-spinq { height: 25px; }
+    .wordmark { font-size: 16px; }
+    .brand { gap: 9px; }
+  }
+  @media (max-width: 380px) {
+    .logo-spinq, .brand-divider { display: none; }
+  }
+  @media (min-width: 761px) {
+    .mobile-menu { display: none !important; }
+  }
+</style>

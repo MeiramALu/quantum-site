@@ -1,0 +1,303 @@
+---
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { media } from '../data/media';
+import { partners, trips } from '../data/partners';
+import spinqVisit2 from '../assets/images/spinq-visit-2.jpeg';
+
+// Map trip image filenames to processed assets.
+const imgs = import.meta.glob<{ default: ImageMetadata }>('../assets/images/*', { eager: true });
+const tripImg = (file: string) => imgs[`../assets/images/${file}`].default;
+
+const fmtDate = (iso: string) =>
+  iso
+    ? new Date(iso).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+    : '';
+
+const description =
+  'Media coverage of the Quantum AI Laboratory at KazNU, its international collaborations (SpinQ, Terra Quantum, RQC, Wigner, and more), and the team’s conferences and research visits.';
+---
+
+<Base title="Media & collaboration" description={description} active="media">
+  <PageHeader
+    eyebrow="Media & collaboration"
+    title="What the world says — and who we work with."
+    lede="Press coverage of the lab's opening, our international partners in quantum computing, and where the team has presented and visited."
+  />
+
+  <!-- MEDIA ABOUT US -->
+  <section class="section" id="press">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Media about us</p>
+        <h2>In the press.</h2>
+        <p>Coverage of the laboratory's launch. Each item links to the original article at its source.</p>
+      </div>
+
+      <div class="press-grid">
+        {media.map((m, i) => (
+          <article class="press" data-reveal data-reveal-delay={String((i % 3) + 1)}>
+            <div class="press-top">
+              <span class="press-outlet">{m.outlet}</span>
+              <span class="press-lang">{m.lang}</span>
+            </div>
+            <h3 class="press-title">
+              <a href={m.url} target="_blank" rel="noopener">{m.title}</a>
+            </h3>
+            <p class="press-excerpt">{m.excerpt}</p>
+            <div class="press-foot">
+              {m.date && <span class="press-date">{fmtDate(m.date)}</span>}
+              <a class="press-read" href={m.url} target="_blank" rel="noopener">Read article ↗</a>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- PARTNERS -->
+  <section class="section dark partners-sec" id="partners">
+    <div class="container">
+      <div class="section-head on-dark" data-reveal>
+        <p class="eyebrow on-dark">Collaboration</p>
+        <h2>International partners.</h2>
+        <p>We collaborate with scientific and commercial organisations in quantum computing across China, Switzerland, Hungary, Russia, and Kazakhstan.</p>
+      </div>
+
+      <div class="partner-grid">
+        {partners.map((p) => (
+          <div class="partner" data-reveal>
+            <span class="partner-name">{p.name}</span>
+            <span class="partner-meta">{p.country} · {p.kind}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- SPINQ HIGHLIGHT -->
+  <section class="section spinq" id="spinq">
+    <div class="container spinq-grid">
+      <div class="spinq-media" data-reveal>
+        <Image
+          src={spinqVisit2}
+          alt="The lab team meeting SpinQ representatives to discuss quantum-computing collaboration"
+          widths={[480, 800, 1100]}
+          sizes="(max-width: 900px) 100vw, 48vw"
+          loading="lazy"
+        />
+      </div>
+      <div class="spinq-copy" data-reveal data-reveal-delay="1">
+        <p class="eyebrow">Hardware partner</p>
+        <h2>Built with SpinQ.</h2>
+        <p class="lead">
+          The laboratory was equipped in partnership with <strong>SpinQ Technology</strong>, a
+          world manufacturer of quantum computers. The team visited SpinQ's headquarters in
+          Shenzhen, China, for a demonstration of the hardware and to plan the road ahead for the
+          Quantum AI Laboratory — with more SpinQ devices in the pipeline.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ON THE ROAD -->
+  <section class="section road" id="road">
+    <div class="container">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">On the road</p>
+        <h2>Conferences &amp; research visits.</h2>
+        <p>The team has presented results and built collaborations at leading quantum venues worldwide.</p>
+      </div>
+
+      <div class="trip-grid">
+        {trips.map((t, i) => (
+          <figure class="trip" data-reveal data-reveal-delay={String((i % 3) + 1)}>
+            <div class="trip-img">
+              <Image
+                src={tripImg(t.imageFile)}
+                alt={`${t.event}, ${t.place}`}
+                widths={[400, 700, 1000]}
+                sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 25vw"
+                loading="lazy"
+              />
+            </div>
+            <figcaption>
+              <span class="trip-place">{t.place}</span>
+              <span class="trip-event">{t.event}</span>
+              <p class="trip-note">{t.note}</p>
+            </figcaption>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* PRESS */
+  .press-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--s-base);
+  }
+  .press {
+    background: var(--c-sky);
+    border: 1px solid var(--c-ink-deep);
+    padding: var(--s-md);
+    display: flex;
+    flex-direction: column;
+    min-height: 260px;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .press:hover { transform: translateY(-4px); }
+  .press-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: var(--s-base);
+    border-bottom: 1px solid rgba(8, 9, 12, 0.25);
+  }
+  .press-outlet {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--c-ink-deep);
+  }
+  .press-lang {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--c-ink-deep);
+    border: 1px solid rgba(8, 9, 12, 0.4);
+    padding: 2px 6px;
+  }
+  .press-title { margin-top: var(--s-base); font-size: 20px; line-height: 1.2; color: var(--c-ink-deep); text-wrap: balance; }
+  .press-title a { text-decoration: none; }
+  .press-title a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .press-excerpt {
+    margin-top: 12px;
+    color: var(--c-ink-deep);
+    opacity: 0.82;
+    font-size: 14.5px;
+    line-height: 1.55;
+  }
+  .press-foot {
+    margin-top: auto;
+    padding-top: var(--s-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+  }
+  .press-date { font-family: var(--f-mono); font-size: 11px; color: var(--c-ink-deep); opacity: 0.7; }
+  .press-read {
+    font-family: var(--f-mono);
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--c-ink-deep);
+    border-bottom: 1px solid var(--c-ink-deep);
+    padding-bottom: 3px;
+  }
+
+  /* PARTNERS */
+  .partners-sec { border-block: 1px solid var(--c-ink-deep); }
+  .partner-grid {
+    margin-top: var(--s-xl);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    border-top: 1px solid var(--c-hairline-dark);
+    border-left: 1px solid var(--c-hairline-dark);
+  }
+  .partner {
+    padding: var(--s-md);
+    border-right: 1px solid var(--c-hairline-dark);
+    border-bottom: 1px solid var(--c-hairline-dark);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-height: 108px;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+  }
+  .partner:hover { background: rgba(122, 147, 126, 0.06); }
+  .partner-name {
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: -0.01em;
+    color: #fff;
+  }
+  .partner-meta {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--c-muted-dark);
+  }
+
+  /* SPINQ */
+  .spinq-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+  }
+  .spinq-media img {
+    width: 100%;
+    aspect-ratio: 3 / 2;
+    object-fit: cover;
+    border: 1px solid var(--c-hairline);
+  }
+  .spinq-copy h2 { font-size: clamp(28px, 3.6vw, 42px); margin-top: var(--s-base); text-wrap: balance; }
+  .spinq-copy .lead { margin-top: var(--s-md); font-size: var(--t-body-lg); line-height: 1.6; color: var(--c-muted); max-width: 56ch; }
+  .spinq-copy strong { color: var(--c-ink); font-weight: 600; }
+
+  /* ROAD */
+  .road { background: var(--c-surface-1); border-top: 1px solid var(--c-hairline); }
+  .trip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: var(--s-md);
+  }
+  .trip { margin: 0; background: var(--c-canvas); border: 1px solid var(--c-hairline); }
+  .trip-img { overflow: hidden; }
+  .trip-img img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .trip:hover .trip-img img { transform: scale(1.05); }
+  .trip figcaption { padding: var(--s-md); display: flex; flex-direction: column; gap: 4px; }
+  .trip-place { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--c-muted); }
+  .trip-event { font-family: var(--f-display); font-weight: 600; font-size: 18px; letter-spacing: -0.01em; }
+  .trip-note { margin-top: 6px; font-size: 13.5px; color: var(--c-muted); line-height: 1.5; }
+
+  @media (max-width: 760px) {
+    .spinq-grid { grid-template-columns: 1fr; gap: var(--s-lg); }
+    .spinq-media { order: -1; }
+  }
+  @media (max-width: 700px) {
+    .press { min-height: 0; padding: var(--s-base); }
+    .press-title { font-size: 17px; }
+    .press-excerpt { font-size: 13.5px; }
+    .partner { min-height: 0; padding: 14px var(--s-base); }
+    .partner-name { font-size: 16px; }
+    .spinq-copy h2 { font-size: clamp(22px, 6.2vw, 30px); }
+    .spinq-copy .lead { font-size: 15.5px; }
+    /* compact 2-up travel grid */
+    .trip-grid { grid-template-columns: 1fr 1fr; gap: var(--s-sm); }
+    .trip figcaption { padding: 12px; }
+    .trip-event { font-size: 15px; }
+    .trip-note { font-size: 12px; margin-top: 4px; }
+    .trip-place { font-size: 9.5px; }
+  }
+  @media (max-width: 420px) {
+    .trip-grid { grid-template-columns: 1fr; }
+  }
+</style>

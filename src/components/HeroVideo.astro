@@ -1,0 +1,254 @@
+---
+// Full-viewport hero. The video is a background flourish only — it is muted,
+// decorative (aria-hidden), and never downloaded on mobile / reduced-motion /
+// save-data (the poster carries those cases). Files live in /public.
+---
+
+<section class="hero" data-hero>
+  <div class="hero-media" aria-hidden="true">
+    <video
+      class="hero-video"
+      poster="/poster.jpg"
+      muted
+      loop
+      playsinline
+      preload="none"
+      data-hero-video
+    >
+      <source data-src="/hero.webm" type="video/webm" />
+      <source data-src="/hero.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-scrim"></div>
+    <div class="hero-grid-lines"></div>
+  </div>
+
+  <div class="container hero-inner">
+    <p class="hero-eyebrow">Al-Farabi Kazakh National University · Almaty</p>
+    <h1 class="hero-title">Quantum&nbsp;AI Laboratory</h1>
+    <p class="hero-lede">
+      The first quantum-computing laboratory in Kazakhstan — where quantum and hybrid
+      algorithms meet real problems in physics, energy, and machine learning.
+    </p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="/research">Explore our research</a>
+      <a class="btn btn-secondary" href="#lab">Inside the lab</a>
+    </div>
+
+    <div class="hero-meta">
+      <span>First in Kazakhstan</span>
+      <span class="dot" aria-hidden="true"></span>
+      <span>Powered by SpinQ quantum computers</span>
+      <span class="dot" aria-hidden="true"></span>
+      <span>Opened June 2026</span>
+    </div>
+  </div>
+
+  <a class="hero-scroll" href="#lab" aria-label="Scroll to lab overview">
+    <span class="hero-scroll-label">Scroll</span>
+    <span class="hero-scroll-line" aria-hidden="true"></span>
+  </a>
+</section>
+
+<script is:inline>
+  (function () {
+    var v = document.querySelector('[data-hero-video]');
+    if (!v) return;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var small = window.matchMedia('(max-width: 760px)').matches;
+    var conn = navigator.connection || {};
+    var saveData = conn.saveData === true;
+    if (reduce || small || saveData) return; // poster only — no video fetch
+
+    v.muted = true; // REQUIRED for autoplay to be allowed
+    v.setAttribute('muted', '');
+    var sources = v.querySelectorAll('source[data-src]');
+    sources.forEach(function (s) { s.src = s.getAttribute('data-src'); s.removeAttribute('data-src'); });
+    v.load();
+
+    var tryPlay = function () {
+      var p = v.play();
+      if (p && p.then) {
+        p.then(function () { v.classList.add('is-playing'); })
+         .catch(function () { /* stay on poster */ });
+      } else {
+        v.classList.add('is-playing');
+      }
+    };
+    if (v.readyState >= 2) tryPlay();
+    else v.addEventListener('loadeddata', tryPlay, { once: true });
+    // fallback in case loadeddata was missed
+    v.addEventListener('canplay', tryPlay, { once: true });
+  })();
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 92vh;
+    min-height: 92svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    overflow: hidden;
+    background: var(--c-ink-deep);
+    color: var(--c-canvas);
+    isolation: isolate;
+  }
+  .hero-media { position: absolute; inset: 0; z-index: -2; }
+  .hero-video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* poster shows here until (and unless) the video plays */
+    opacity: 0.55;
+    filter: saturate(1.05) contrast(1.02);
+  }
+  /* darkening + bottom fade so the golden headline always clears contrast */
+  .hero-scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(8, 9, 12, 0.72) 0%, rgba(8, 9, 12, 0.32) 34%, rgba(8, 9, 12, 0.62) 72%, rgba(8, 9, 12, 0.96) 100%),
+      radial-gradient(120% 80% at 15% 90%, rgba(8, 9, 12, 0.7), transparent 60%);
+  }
+  .hero-grid-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(122, 147, 126, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(122, 147, 126, 0.06) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(120% 90% at 50% 100%, #000 20%, transparent 75%);
+    opacity: 0.7;
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding-block: var(--s-2xl) clamp(48px, 8vh, 96px);
+    max-width: 940px;
+  }
+  .hero-eyebrow {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--c-primary);
+    margin-bottom: var(--s-md);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    max-width: 100%;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    width: 26px;
+    height: 1px;
+    background: var(--c-primary);
+    flex: none;
+  }
+  .hero-title {
+    font-family: var(--f-display);
+    font-weight: 600;
+    color: var(--c-secondary);
+    font-size: clamp(38px, 8.5vw, 92px);
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+    overflow-wrap: break-word;
+    margin: 0;
+  }
+  .hero-lede {
+    margin-top: var(--s-md);
+    max-width: 60ch;
+    font-size: clamp(17px, 2.1vw, 21px);
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.9);
+    text-wrap: pretty;
+  }
+  .hero-actions {
+    margin-top: var(--s-xl);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-base);
+  }
+  .hero-meta {
+    margin-top: var(--s-xl);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    font-family: var(--f-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--c-muted-dark);
+  }
+  .hero-meta .dot {
+    width: 4px;
+    height: 4px;
+    background: var(--c-primary);
+    border-radius: 50%;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    right: clamp(16px, 4vw, 40px);
+    bottom: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    color: var(--c-muted-dark);
+  }
+  .hero-scroll-label {
+    font-family: var(--f-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    writing-mode: vertical-rl;
+  }
+  .hero-scroll-line {
+    width: 1px;
+    height: 56px;
+    background: linear-gradient(var(--c-primary), transparent);
+    animation: scrollpulse 2.4s ease-in-out infinite;
+    transform-origin: top;
+  }
+  @keyframes scrollpulse {
+    0%, 100% { transform: scaleY(0.4); opacity: 0.5; }
+    50% { transform: scaleY(1); opacity: 1; }
+  }
+
+  /* Entrance — plays once, respects reduced motion */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-eyebrow, .hero-title, .hero-lede, .hero-actions, .hero-meta {
+      animation: heroRise 0.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+    }
+    .hero-title { animation-delay: 0.06s; }
+    .hero-lede { animation-delay: 0.14s; }
+    .hero-actions { animation-delay: 0.22s; }
+    .hero-meta { animation-delay: 0.3s; }
+  }
+  @keyframes heroRise {
+    from { opacity: 0; transform: translateY(18px); }
+    to { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-scroll-line { animation: none; }
+  }
+
+  @media (max-width: 760px) {
+    .hero { min-height: 86vh; align-items: center; }
+    .hero-scroll { display: none; }
+    .hero-video { opacity: 0.5; }
+    .hero-inner { padding-block: 120px var(--s-xl); }
+    .hero-eyebrow { letter-spacing: 0.1em; font-size: 10px; }
+    .hero-title { font-size: clamp(34px, 10.5vw, 52px); }
+    .hero-actions { width: 100%; }
+    .hero-actions .btn { flex: 1 1 auto; }
+    .hero-meta { gap: 8px 12px; }
+  }
+</style>

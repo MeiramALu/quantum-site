@@ -1,0 +1,22 @@
+{
+  "name": "quantum-ai-lab",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "Quantum AI Laboratory — Al-Farabi Kazakh National University, Almaty",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@fontsource-variable/geist": "^5.2.9",
+    "@fontsource-variable/geist-mono": "^5.2.8",
+    "astro": "^5.6.1",
+    "sharp": "^0.33.5"
+  },
+  "engines": {
+    "node": ">=18.20.8"
+  }
+}

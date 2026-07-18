@@ -1,0 +1,62 @@
+---
+import '@fontsource-variable/geist';
+import '@fontsource-variable/geist-mono';
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** which nav item is active */
+  active?: 'home' | 'research' | 'media';
+}
+
+const { title, description, active = 'home' } = Astro.props;
+const siteName = 'Quantum AI Laboratory';
+const fullTitle = active === 'home' ? `${siteName} — Al-Farabi KazNU` : `${title} · ${siteName}`;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#08090c" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Nav active={active} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    background: var(--c-primary);
+    color: var(--c-ink-deep);
+    padding: 10px 16px;
+    font-weight: 700;
+  }
+  .skip-link:focus { left: 12px; top: 12px; }
+
+  /* Content is always visible — motion lives in the hero entrance and in
+     hover/focus interactions, never in visibility-gating scroll reveals.
+     [data-reveal] hooks are kept inert for possible future CSS-only motion. */
+</style>

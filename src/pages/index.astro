@@ -1,0 +1,585 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import HeroVideo from '../components/HeroVideo.astro';
+import Gallery from '../components/Gallery.astro';
+import { directions } from '../data/research';
+import { team } from '../data/team';
+import labMain from '../assets/images/lab-main.jpeg';
+import labInterior from '../assets/images/lab-interior.jpg';
+import labOpening from '../assets/images/lab-opening.png';
+import spinqInterface from '../assets/images/spinq-interface.jpeg';
+import spinqVisit from '../assets/images/spinq-visit-1.jpeg';
+
+// Team portraits: drop a file in src/assets/team/ named per team.ts photoFile.
+const teamPhotos = import.meta.glob('../assets/team/*', { eager: true });
+const memberPhoto = (file) => teamPhotos['../assets/team/' + file]?.default;
+const teamWithPhotos = team.map((m) => ({ ...m, photo: memberPhoto(m.photoFile) }));
+
+const facts = [
+  { n: '1st', l: 'quantum-computing lab in Kazakhstan' },
+  { n: '6', l: 'SpinQ quantum computers on site' },
+  { n: '7', l: 'peer-reviewed publications' },
+  { n: '2026', l: 'year the lab opened' },
+];
+
+const galleryItems = [
+  { src: labInterior, alt: 'Workstations and SpinQ quantum computers inside the Quantum AI Laboratory', caption: 'Inside the lab', wide: true },
+  { src: labOpening, alt: 'The lab team with the KazNU rector and international guests at the official opening', caption: 'Official opening, June 2026' },
+  { src: spinqVisit, alt: 'Lab members meeting the SpinQ delegation at the Quantum AI Laboratory', caption: 'With the SpinQ delegation' },
+];
+
+const description =
+  'The Quantum AI Laboratory at Al-Farabi Kazakh National University — the first quantum-computing lab in Kazakhstan. Quantum and hybrid algorithms for physics, energy, and machine learning.';
+---
+
+<Base title="Home" description={description} active="home">
+  <HeroVideo />
+
+  <!-- ABOUT / INSIDE THE LAB -->
+  <section class="section" id="lab">
+    <div class="container about">
+      <div class="about-copy" data-reveal>
+        <p class="eyebrow">The laboratory</p>
+        <h2>A first for Kazakhstan — quantum computing, built on real research.</h2>
+        <p class="lead">
+          The Quantum AI Laboratory opened at Al-Farabi Kazakh National University to give the
+          country its first home for quantum and hybrid computing. It grows out of the KazNU
+          group's active research projects and builds a modern cloud infrastructure for
+          quantum experiments, teaching, and applied science.
+        </p>
+        <p>
+          From this year, master's students take a dedicated quantum-computing course, and the
+          lab is drawing students into a field where Kazakhstan has had no doctoral dissertation
+          of its own — while the world has produced thousands. The work reaches into oil
+          recovery, the modelling of physical processes, and artificial intelligence.
+        </p>
+        <div class="about-note">
+          <span class="about-note-k">0 → the goal</span>
+          <p>
+            No PhD dissertation on quantum computing has yet been defended in Kazakhstan, against
+            roughly <strong>9,000+</strong> worldwide. Changing that is why the lab exists.
+          </p>
+        </div>
+      </div>
+      <div class="about-media" data-reveal data-reveal-delay="1">
+        <Image
+          src={labMain}
+          alt="The Quantum AI Laboratory: workstations beneath the QUANTUM AI wall sign with the KazNU and SpinQ marks"
+          widths={[480, 800, 1100]}
+          sizes="(max-width: 900px) 100vw, 45vw"
+          loading="eager"
+        />
+        <p class="about-media-cap">Faculty of Information Technology &amp; Artificial Intelligence · Almaty</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FACTS STRIP -->
+  <section class="facts-band">
+    <div class="container facts">
+      {facts.map((f) => (
+        <div class="fact">
+          <span class="fact-n">{f.n}</span>
+          <span class="fact-l">{f.l}</span>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- RESEARCH PREVIEW -->
+  <section class="section" id="research-preview">
+    <div class="container">
+      <div class="head-row">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">Research directions</p>
+          <h2>Three lines of work, one hybrid philosophy.</h2>
+          <p>
+            The lab pairs quantum algorithms with classical high-performance computing —
+            targeting problems where that combination pays off today, on real and simulated
+            hardware.
+          </p>
+        </div>
+        <a class="head-link" href="/research">All research &amp; publications →</a>
+      </div>
+
+      <div class="dir-grid">
+        {directions.map((d, i) => (
+          <article class="dir" data-color={d.color} data-reveal data-reveal-delay={String((i % 3) + 1)}>
+            <span class="dir-idx">0{i + 1}</span>
+            <h3>{d.title}</h3>
+            <p>{d.blurb}</p>
+            <ul class="dir-tags">
+              {d.tags.map((t) => <li>{t}</li>)}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- EQUIPMENT & TECHNOLOGY -->
+  <section class="section dark equip" id="equipment">
+    <div class="container equip-grid">
+      <div class="equip-media" data-reveal>
+        <Image
+          src={spinqInterface}
+          alt="The control interface of a SpinQ Gemini Mini Pro quantum computer"
+          widths={[420, 720, 1000]}
+          sizes="(max-width: 900px) 100vw, 42vw"
+          loading="lazy"
+        />
+      </div>
+      <div class="equip-copy on-dark" data-reveal data-reveal-delay="1">
+        <p class="eyebrow on-dark">Equipment &amp; technology</p>
+        <h2>Real quantum hardware — running at room temperature.</h2>
+        <p class="lead">
+          The lab runs six <strong>SpinQ Gemini Mini Pro</strong> machines — 2-qubit
+          computers built on nuclear magnetic resonance (NMR), the only quantum technology that
+          operates at room temperature. They power student training and hands-on experiments,
+          with more SpinQ devices planned.
+        </p>
+
+        <div class="stack">
+          <div class="stack-col">
+            <h4 class="stack-h">Frameworks</h4>
+            <ul class="chips">
+              <li>Qiskit</li><li>PennyLane</li><li>SpinQit</li>
+            </ul>
+          </div>
+          <div class="stack-col">
+            <h4 class="stack-h">Cloud platforms</h4>
+            <ul class="chips">
+              <li>OriginQ Cloud</li><li>TQML · Terra Quantum</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM -->
+  <section class="section" id="team">
+    <div class="container">
+      <div class="section-head center" data-reveal>
+        <p class="eyebrow">The team</p>
+        <h2>A small group with a wide reach.</h2>
+        <p>Three researchers building Kazakhstan's quantum-computing practice from the ground up.</p>
+      </div>
+
+      <div class="team-grid">
+        {teamWithPhotos.map((m, i) => (
+          <article class="member" data-reveal data-reveal-delay={String((i % 3) + 1)}>
+            <div class="portrait" data-i={m.initials}>
+              {m.photo ? (
+                <Image
+                  src={m.photo}
+                  alt={`${m.name}, ${m.role}`}
+                  widths={[320, 560]}
+                  sizes="(max-width: 700px) 90vw, 360px"
+                  loading="lazy"
+                  class="portrait-img"
+                />
+              ) : (
+                <Fragment>
+                  <span class="portrait-initials" aria-hidden="true">{m.initials}</span>
+                  <span class="portrait-tag">Photo</span>
+                </Fragment>
+              )}
+            </div>
+            <h3 class="member-name">{m.name}</h3>
+            <p class="member-role">{m.role}</p>
+            <p class="member-cred">{m.credentials}</p>
+            <ul class="member-focus">
+              {m.focus.map((f) => <li>{f}</li>)}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- GALLERY PREVIEW -->
+  <section class="section gallery-sec" id="gallery">
+    <div class="container">
+      <div class="head-row">
+        <div class="section-head" data-reveal>
+          <p class="eyebrow">In pictures</p>
+          <h2>From the opening bench to the world stage.</h2>
+        </div>
+        <a class="head-link" href="/media">Media &amp; travels →</a>
+      </div>
+    </div>
+    <div class="container-wide" data-reveal>
+      <Gallery items={galleryItems} />
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta">
+    <div class="container cta-inner">
+      <h2>Working on quantum computing? Let's talk.</h2>
+      <p>
+        We collaborate with universities, research centres, and industry on quantum algorithms,
+        hybrid computing, and quantum machine learning.
+      </p>
+      <div class="cta-actions">
+        <a class="btn btn-primary" href="/media#partners">See our collaborators</a>
+        <a class="btn btn-secondary" href="/research">Read the research</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ABOUT */
+  .about {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(32px, 6vw, 80px);
+    align-items: center;
+  }
+  .about-copy h2 {
+    font-size: clamp(28px, 3.6vw, 42px);
+    margin-top: var(--s-base);
+    text-wrap: balance;
+  }
+  .about-copy .lead {
+    margin-top: var(--s-md);
+    font-size: var(--t-body-lg);
+    line-height: 1.6;
+    max-width: 60ch;
+  }
+  .about-copy p:not(.lead):not(.eyebrow) {
+    margin-top: var(--s-base);
+    color: var(--c-muted);
+    max-width: 60ch;
+    line-height: 1.65;
+  }
+  .about-note {
+    margin-top: var(--s-lg);
+    padding: var(--s-md);
+    border: 1px solid var(--c-hairline);
+    background: var(--c-surface-1);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--s-md);
+    align-items: center;
+  }
+  .about-note-k {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--c-ink);
+    border-right: 1px solid var(--c-hairline);
+    padding-right: var(--s-md);
+    white-space: nowrap;
+  }
+  .about-note p { color: var(--c-ink); font-size: 15px; line-height: 1.55; }
+  .about-media img {
+    width: 100%;
+    border: 1px solid var(--c-hairline);
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+  }
+  .about-media-cap {
+    margin-top: 10px;
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.03em;
+    color: var(--c-muted);
+  }
+
+  /* FACTS */
+  .facts-band { border-block: 1px solid var(--c-hairline); background: var(--c-canvas); }
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    padding-block: var(--s-xl);
+  }
+  .fact { padding-inline: var(--s-md); border-left: 1px solid var(--c-hairline); }
+  .fact:first-child { border-left: 0; padding-left: 0; }
+  .fact-n {
+    display: block;
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: clamp(30px, 4vw, 46px);
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .fact-l {
+    display: block;
+    margin-top: 10px;
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    line-height: 1.5;
+    color: var(--c-muted);
+    text-transform: uppercase;
+  }
+
+  /* SECTION HEAD ROW */
+  .head-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--s-md);
+    margin-bottom: var(--s-xl);
+  }
+  .head-row .section-head { margin-bottom: 0; }
+  .section-head.center { margin-inline: auto; text-align: center; margin-bottom: var(--s-xl); }
+  .head-link {
+    font-family: var(--f-mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--c-ink);
+    transition: color 0.15s ease, border-color 0.15s ease;
+  }
+  .head-link:hover { color: var(--c-muted); }
+
+  /* RESEARCH CARDS (colored = taxonomy) */
+  .dir-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--s-base);
+  }
+  .dir {
+    padding: var(--s-lg) var(--s-md) var(--s-md);
+    border: 1px solid var(--c-ink-deep);
+    display: flex;
+    flex-direction: column;
+    min-height: 300px;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .dir[data-color='chartreuse'] { background: var(--c-tertiary); }
+  .dir[data-color='lavender'] { background: var(--c-lavender); }
+  .dir[data-color='mint'] { background: var(--c-mint-soft); }
+  .dir:hover { transform: translateY(-4px); }
+  .dir-idx {
+    font-family: var(--f-mono);
+    font-size: 12px;
+    color: var(--c-ink-deep);
+    opacity: 0.6;
+  }
+  .dir h3 {
+    margin-top: var(--s-md);
+    font-size: 23px;
+    color: var(--c-ink-deep);
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+  .dir p {
+    margin-top: 12px;
+    color: var(--c-ink-deep);
+    font-size: 15px;
+    line-height: 1.55;
+    opacity: 0.86;
+  }
+  .dir-tags {
+    margin-top: auto;
+    padding-top: var(--s-md);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .dir-tags li {
+    font-family: var(--f-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    border: 1px solid rgba(8, 9, 12, 0.28);
+    color: var(--c-ink-deep);
+  }
+
+  /* EQUIPMENT */
+  .equip { border-block: 1px solid var(--c-ink-deep); }
+  .equip-grid {
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+    gap: clamp(28px, 5vw, 64px);
+    align-items: center;
+  }
+  .equip-media img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border: 1px solid var(--c-hairline-dark);
+  }
+  .equip-copy h2 { font-size: clamp(26px, 3.4vw, 40px); margin-top: var(--s-base); text-wrap: balance; }
+  .equip-copy .lead {
+    margin-top: var(--s-md);
+    font-size: var(--t-body-lg);
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.86);
+    max-width: 58ch;
+  }
+  .equip-copy strong { color: var(--c-primary); font-weight: 600; }
+  .stack { margin-top: var(--s-lg); display: flex; flex-wrap: wrap; gap: var(--s-xl); }
+  .stack-h {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--c-muted-dark);
+    margin-bottom: 12px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips li {
+    font-size: 13px;
+    padding: 7px 12px;
+    border: 1px solid var(--c-hairline-dark);
+    color: #fff;
+  }
+
+  /* TEAM */
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--s-md);
+  }
+  .member {
+    border: 1px solid var(--c-hairline);
+    padding: var(--s-md);
+    background: var(--c-canvas);
+  }
+  .portrait {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    background:
+      radial-gradient(120% 120% at 30% 20%, rgba(122, 147, 126, 0.4), transparent 55%),
+      radial-gradient(120% 120% at 80% 90%, rgba(234, 160, 245, 0.3), transparent 55%),
+      var(--c-ink-deep);
+  }
+  .portrait-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 22%; /* bias toward faces */
+    z-index: 1;
+  }
+  .portrait:has(.portrait-img)::before { display: none; }
+  .portrait::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px);
+    background-size: 26px 26px;
+    mask-image: radial-gradient(80% 80% at 50% 50%, #000, transparent 75%);
+  }
+  .portrait-initials {
+    font-family: var(--f-display);
+    font-weight: 600;
+    font-size: 56px;
+    color: rgba(255, 255, 255, 0.92);
+    letter-spacing: -0.03em;
+  }
+  .portrait-tag {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    font-family: var(--f-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 3px 6px;
+  }
+  .member-name { margin-top: var(--s-md); font-size: 21px; letter-spacing: -0.02em; }
+  .member-role { margin-top: 6px; font-weight: 600; color: var(--c-ink); font-size: 14px; }
+  .member-cred {
+    font-family: var(--f-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--c-muted);
+    margin-top: 4px;
+  }
+  .member-focus { margin-top: var(--s-base); display: flex; flex-direction: column; gap: 6px; }
+  .member-focus li {
+    font-size: 13.5px;
+    color: var(--c-muted);
+    padding-left: 16px;
+    position: relative;
+  }
+  .member-focus li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    width: 6px;
+    height: 6px;
+    background: var(--c-primary);
+  }
+
+  /* GALLERY SECTION */
+  .gallery-sec { padding-bottom: var(--s-2xl); }
+  .container-wide { max-width: 1360px; margin-inline: auto; padding-inline: var(--s-md); }
+
+  /* CTA */
+  .cta { background: var(--c-surface-1); border-top: 1px solid var(--c-hairline); }
+  .cta-inner {
+    padding-block: var(--s-2xl);
+    text-align: center;
+    max-width: 640px;
+  }
+  .cta { margin-inline: 0; }
+  .cta-inner { margin-inline: auto; }
+  .cta-inner h2 { font-size: clamp(26px, 3.6vw, 40px); text-wrap: balance; }
+  .cta-inner p { margin-top: var(--s-base); color: var(--c-muted); font-size: var(--t-body-lg); }
+  .cta-actions { margin-top: var(--s-lg); display: flex; gap: var(--s-base); justify-content: center; flex-wrap: wrap; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .about { grid-template-columns: 1fr; gap: var(--s-lg); }
+    .about-media { order: -1; }
+    .equip-grid { grid-template-columns: 1fr; gap: var(--s-lg); }
+    .equip-media { order: -1; }
+    .facts { grid-template-columns: repeat(2, 1fr); gap: var(--s-lg) 0; }
+    .fact:nth-child(3) { border-left: 0; padding-left: 0; }
+  }
+  @media (max-width: 700px) {
+    .about-copy h2 { font-size: clamp(22px, 6.4vw, 30px); }
+    .about-copy .lead { font-size: 15.5px; }
+    .about-copy p:not(.lead):not(.eyebrow) { font-size: 14.5px; }
+    .about-media img { aspect-ratio: 16 / 10; }
+    .facts { padding-block: var(--s-lg); }
+    .fact-n { font-size: clamp(26px, 9vw, 34px); }
+    .fact-l { font-size: 10px; }
+    /* research cards: no tall min-height, tighter */
+    .dir { min-height: 0; padding: var(--s-md) var(--s-base) var(--s-base); }
+    .dir h3 { font-size: 19px; margin-top: 14px; }
+    .dir p { font-size: 14px; margin-top: 10px; }
+    .equip-copy h2 { font-size: clamp(22px, 6vw, 30px); }
+    .equip-copy .lead { font-size: 15.5px; }
+    .equip-media img { aspect-ratio: 16 / 10; }
+    /* compact 2-up team */
+    .team-grid { grid-template-columns: 1fr 1fr; gap: var(--s-base); }
+    .member { padding: 10px; }
+    .member-name { font-size: 15.5px; margin-top: 12px; }
+    .member-role { font-size: 12px; }
+    .member-cred { font-size: 10px; }
+    .member-focus { margin-top: 10px; gap: 4px; }
+    .member-focus li { font-size: 11.5px; padding-left: 13px; }
+    .cta-inner h2 { font-size: clamp(23px, 6.4vw, 32px); }
+    .cta-inner p { font-size: 15.5px; }
+  }
+  @media (max-width: 640px) {
+    .head-row { flex-direction: column; align-items: flex-start; gap: var(--s-md); }
+    .about-note { grid-template-columns: 1fr; gap: var(--s-sm); }
+    .about-note-k { border-right: 0; border-bottom: 1px solid var(--c-hairline); padding-right: 0; padding-bottom: 10px; }
+    .facts { grid-template-columns: 1fr 1fr; row-gap: var(--s-md); }
+  }
+</style>
