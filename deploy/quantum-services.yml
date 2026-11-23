@@ -1,0 +1,22 @@
+# Добавить в /opt/sites/docker-compose.yml внутрь блока services: (отступ 2 пробела)
+# Секреты — в /var/www/quantum-ai/.env (шаблон: deploy/.env.example)
+  quantum:
+    build: {context: /var/www/quantum-ai}
+    image: site-quantum
+    env_file: /var/www/quantum-ai/.env
+    environment:
+      DB_CLIENT: sqlite3
+      DB_FILENAME: /directus/database/data.db
+      STORAGE_LOCATIONS: local
+      STORAGE_LOCAL_ROOT: /directus/uploads
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "true"
+    volumes:
+      - /var/www/quantum-ai/cms-data/database:/directus/database
+      - /var/www/quantum-ai/cms-data/uploads:/directus/uploads
+    ports:
+      - "127.0.0.1:4321:4321"   # сайт
+      - "127.0.0.1:8055:8055"   # админка
+    cpus: 2
+    mem_limit: 2g
+    restart: unless-stopped

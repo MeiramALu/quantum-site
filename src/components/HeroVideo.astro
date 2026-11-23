@@ -1,4 +1,6 @@
 ---
+import { getSettings, fileUrl, img } from '../lib/cms';
+const S = await getSettings();
 // Full-viewport hero. The video is a background flourish only — it is muted,
 // decorative (aria-hidden), and never downloaded on mobile / reduced-motion /
 // save-data (the poster carries those cases). Files live in /public.
@@ -8,15 +10,15 @@
   <div class="hero-media" aria-hidden="true">
     <video
       class="hero-video"
-      poster="/poster.jpg"
+      poster={img(S.hero_poster, 1600)}
       muted
       loop
       playsinline
       preload="none"
       data-hero-video
     >
-      <source data-src="/hero.webm" type="video/webm" />
-      <source data-src="/hero.mp4" type="video/mp4" />
+      <source data-src={fileUrl(S.hero_video_webm)} type="video/webm" />
+      <source data-src={fileUrl(S.hero_video_mp4)} type="video/mp4" />
     </video>
     <div class="hero-scrim"></div>
     <div class="hero-grid-lines"></div>

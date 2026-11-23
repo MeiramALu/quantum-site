@@ -1,20 +1,11 @@
 ---
-import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import HeroVideo from '../components/HeroVideo.astro';
 import Gallery from '../components/Gallery.astro';
-import { directions } from '../data/research';
-import { team } from '../data/team';
-import labMain from '../assets/images/lab-main.jpeg';
-import labInterior from '../assets/images/lab-interior.jpg';
-import labOpening from '../assets/images/lab-opening.png';
-import spinqInterface from '../assets/images/spinq-interface.jpeg';
-import spinqVisit from '../assets/images/spinq-visit-1.jpeg';
+import { getDirections, getTeam, getSettings, img, imgSet } from '../lib/cms';
 
 // Team portraits: drop a file in src/assets/team/ named per team.ts photoFile.
-const teamPhotos = import.meta.glob('../assets/team/*', { eager: true });
-const memberPhoto = (file) => teamPhotos['../assets/team/' + file]?.default;
-const teamWithPhotos = team.map((m) => ({ ...m, photo: memberPhoto(m.photoFile) }));
+const [directions, teamWithPhotos, S] = await Promise.all([getDirections(), getTeam(), getSettings()]);
 
 const facts = [
   { n: '1st', l: 'quantum-computing lab in Kazakhstan' },
@@ -24,9 +15,9 @@ const facts = [
 ];
 
 const galleryItems = [
-  { src: labInterior, alt: 'Workstations and SpinQ quantum computers inside the Quantum AI Laboratory', caption: 'Inside the lab', wide: true },
-  { src: labOpening, alt: 'The lab team with the KazNU rector and international guests at the official opening', caption: 'Official opening, June 2026' },
-  { src: spinqVisit, alt: 'Lab members meeting the SpinQ delegation at the Quantum AI Laboratory', caption: 'With the SpinQ delegation' },
+  { src: S.lab_interior, alt: 'Workstations and SpinQ quantum computers inside the Quantum AI Laboratory', caption: 'Inside the lab', wide: true },
+  { src: S.lab_opening, alt: 'The lab team with the KazNU rector and international guests at the official opening', caption: 'Official opening, June 2026' },
+  { src: S.spinq_visit_1, alt: 'Lab members meeting the SpinQ delegation at the Quantum AI Laboratory', caption: 'With the SpinQ delegation' },
 ];
 
 const description =
@@ -63,10 +54,10 @@ const description =
         </div>
       </div>
       <div class="about-media" data-reveal data-reveal-delay="1">
-        <Image
-          src={labMain}
+        <img
+          src={img(S.lab_main, 800)}
+          srcset={imgSet(S.lab_main, [480, 800, 1100])}
           alt="The Quantum AI Laboratory: workstations beneath the QUANTUM AI wall sign with the KazNU and SpinQ marks"
-          widths={[480, 800, 1100]}
           sizes="(max-width: 900px) 100vw, 45vw"
           loading="eager"
         />
@@ -122,10 +113,10 @@ const description =
   <section class="section dark equip" id="equipment">
     <div class="container equip-grid">
       <div class="equip-media" data-reveal>
-        <Image
-          src={spinqInterface}
+        <img
+          src={img(S.spinq_interface, 720)}
+          srcset={imgSet(S.spinq_interface, [420, 720, 1000])}
           alt="The control interface of a SpinQ Gemini Mini Pro quantum computer"
-          widths={[420, 720, 1000]}
           sizes="(max-width: 900px) 100vw, 42vw"
           loading="lazy"
         />
@@ -172,10 +163,10 @@ const description =
           <article class="member" data-reveal data-reveal-delay={String((i % 3) + 1)}>
             <div class="portrait" data-i={m.initials}>
               {m.photo ? (
-                <Image
-                  src={m.photo}
+                <img
+                  src={img(m.photo, 560)}
+                  srcset={imgSet(m.photo, [320, 560])}
                   alt={`${m.name}, ${m.role}`}
-                  widths={[320, 560]}
                   sizes="(max-width: 700px) 90vw, 360px"
                   loading="lazy"
                   class="portrait-img"

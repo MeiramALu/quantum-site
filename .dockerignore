@@ -1,0 +1,9 @@
+node_modules
+dist
+.git
+.astro
+.env
+cms/node_modules
+cms/data
+cms/uploads
+cms/.env

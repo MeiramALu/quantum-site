@@ -1,0 +1,1 @@
+{"name":"quantum-ai-cms","private":true,"version":"1.0.0","scripts":{"bootstrap":"directus bootstrap","start":"directus start"},"dependencies":{"directus":"^12.5.1"}}

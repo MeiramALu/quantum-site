@@ -1,15 +1,10 @@
 ---
-import { Image } from 'astro:assets';
-import type { ImageMetadata } from 'astro';
 import Base from '../layouts/Base.astro';
 import PageHeader from '../components/PageHeader.astro';
-import { media } from '../data/media';
-import { partners, trips } from '../data/partners';
-import spinqVisit2 from '../assets/images/spinq-visit-2.jpeg';
+import { getMedia, getPartners, getTrips, getSettings, img, imgSet } from '../lib/cms';
 
 // Map trip image filenames to processed assets.
-const imgs = import.meta.glob<{ default: ImageMetadata }>('../assets/images/*', { eager: true });
-const tripImg = (file: string) => imgs[`../assets/images/${file}`].default;
+const [media, partners, trips, S] = await Promise.all([getMedia(), getPartners(), getTrips(), getSettings()]);
 
 const fmtDate = (iso: string) =>
   iso
@@ -81,10 +76,10 @@ const description =
   <section class="section spinq" id="spinq">
     <div class="container spinq-grid">
       <div class="spinq-media" data-reveal>
-        <Image
-          src={spinqVisit2}
+        <img
+          src={img(S.spinq_visit_2, 800)}
+          srcset={imgSet(S.spinq_visit_2, [480, 800, 1100])}
           alt="The lab team meeting SpinQ representatives to discuss quantum-computing collaboration"
-          widths={[480, 800, 1100]}
           sizes="(max-width: 900px) 100vw, 48vw"
           loading="lazy"
         />
@@ -115,10 +110,10 @@ const description =
         {trips.map((t, i) => (
           <figure class="trip" data-reveal data-reveal-delay={String((i % 3) + 1)}>
             <div class="trip-img">
-              <Image
-                src={tripImg(t.imageFile)}
+              <img
+                src={img(t.image, 700)}
+                srcset={imgSet(t.image, [400, 700, 1000])}
                 alt={`${t.event}, ${t.place}`}
-                widths={[400, 700, 1000]}
                 sizes="(max-width: 700px) 100vw, (max-width: 1100px) 50vw, 25vw"
                 loading="lazy"
               />

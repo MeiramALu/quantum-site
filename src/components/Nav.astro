@@ -1,7 +1,5 @@
 ---
-import { Image } from 'astro:assets';
-import farabi from '../assets/logos/farabi.png';
-import spinq from '../assets/logos/spinq.png';
+import { getSettings, img, imgSet } from '../lib/cms';
 
 interface Props {
   active?: 'home' | 'research' | 'media';
@@ -17,15 +15,16 @@ const links = [
   { href: '/research', label: 'Research', key: 'research' },
   { href: '/media', label: 'Media', key: 'media' },
 ];
+const S = await getSettings();
 ---
 
 <header class="nav" data-nav>
   <div class="container nav-inner">
     <a class="brand" href="/" aria-label="Quantum AI Laboratory — home">
-      <Image src={farabi} alt="Al-Farabi Kazakh National University" class="logo logo-farabi" widths={[64, 128]} sizes="34px" />
+      <img src={img(S.logo_farabi, 128)} srcset={imgSet(S.logo_farabi, [64, 128])} alt="Al-Farabi Kazakh National University" class="logo logo-farabi" sizes="34px" />
       <span class="wordmark">Quantum&nbsp;AI</span>
       <span class="brand-divider" aria-hidden="true"></span>
-      <Image src={spinq} alt="SpinQ" class="logo logo-spinq" widths={[64, 128]} sizes="30px" />
+      <img src={img(S.logo_spinq, 128)} srcset={imgSet(S.logo_spinq, [64, 128])} alt="SpinQ" class="logo logo-spinq" sizes="30px" />
     </a>
 
     <nav class="nav-links" aria-label="Primary">

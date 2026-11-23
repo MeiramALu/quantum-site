@@ -1,17 +1,16 @@
 ---
-import { Image } from 'astro:assets';
-import farabi from '../assets/logos/farabi.png';
-import spinq from '../assets/logos/spinq-white.png';
+import { getSettings, img, imgSet } from '../lib/cms';
 const year = 2026;
+const S = await getSettings();
 ---
 
 <footer class="footer" id="contact">
   <div class="container footer-grid">
     <div class="footer-brand">
       <div class="brand-row">
-        <Image src={farabi} alt="Al-Farabi Kazakh National University" class="f-logo f-farabi" widths={[64, 128]} sizes="40px" />
+        <img src={img(S.logo_farabi, 128)} srcset={imgSet(S.logo_farabi, [64, 128])} alt="Al-Farabi Kazakh National University" class="f-logo f-farabi" sizes="40px" />
         <span class="footer-word">Quantum AI Laboratory</span>
-        <Image src={spinq} alt="SpinQ" class="f-logo f-spinq" widths={[64, 128]} sizes="34px" />
+        <img src={img(S.logo_spinq_white, 128)} srcset={imgSet(S.logo_spinq_white, [64, 128])} alt="SpinQ" class="f-logo f-spinq" sizes="34px" />
       </div>
       <p class="footer-tag">
         The first quantum-computing laboratory in Kazakhstan, building quantum and hybrid
